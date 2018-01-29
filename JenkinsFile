@@ -28,9 +28,9 @@ node {
       }
    }
    stage('Deploy') {
-       bat 'E:\Installs\curl\src\curl.exe -u jenkins:jenkins -T target/**.war "http://localhost:8080/manager/text/deploy?path=/devops&update=true"'
+       powershell 'E:\Installs\curl\src\curl.exe -u jenkins:jenkins -T target/**.war "http://localhost:8080/manager/text/deploy?path=/devops&update=true"'
    }
    stage("Smoke Test"){
-       bat "E:\Installs\curl\src\curl.exe --retry-delay 10 --retry 5 http://localhost:8085/devops"
+       powershell "E:\Installs\curl\src\curl.exe --retry-delay 10 --retry 5 http://localhost:8085/devops"
    }
 }
