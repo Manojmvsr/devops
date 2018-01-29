@@ -8,8 +8,7 @@ node {
       if (isUnix()) {
          sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean package"
       } else {
-         bat(mvn -Dmaven.test.failure.ignore clean package)
-      }
+			bat returnStdout: true, script: 'mvn clean package'
    }
    stage('Unit Test') {
       junit '**/target/surefire-reports/TEST-*.xml'
@@ -18,20 +17,20 @@ node {
    stage('Integration Test') {
      if (isUnix()) {
         sh "'${mvnHome}/bin/mvn' -Dmaven.test.failure.ignore clean verify"
-     } else {mvn -Dmaven.test.failure.ignore clean verify)
+     } else 'mvn -Dmaven.test.failure.ignore clean verify'
      }
    }
    stage('Sonar') {
       if (isUnix()) {
          sh "'${mvnHome}/bin/mvn' sonar:sonar"
       } else {
-         bat(mvn sonar:sonar)
+         bat'mvn sonar:sonar'
       }
    }
    stage('Deploy') {
-       sh 'E:\Installs\curl\src\curl.exe -u jenkins:jenkins -T target/**.war "http://localhost:8080/manager/text/deploy?path=/devops&update=true"'
+       bat 'E:\Installs\curl\src\curl.exe -u jenkins:jenkins -T target/**.war "http://localhost:8080/manager/text/deploy?path=/devops&update=true"'
    }
    stage("Smoke Test"){
-       sh "E:\Installs\curl\src\curl.exe --retry-delay 10 --retry 5 http://localhost:8085/devops"
+       bat "E:\Installs\curl\src\curl.exe --retry-delay 10 --retry 5 http://localhost:8085/devops"
    }
 }
